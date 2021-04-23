@@ -19,8 +19,10 @@ from playsound import playsound
 import os
 import requests
 from os import path
+import time
 from calculator.simple import SimpleCalculator
 cal = SimpleCalculator()
+
 import os.path
 bad_responce = ['I could not understand the question','I dont know how to respond', "I do not know the answer to that"]
 first_run = True
@@ -234,8 +236,11 @@ else:
 tts.save('responce.mp3')
 playsound('responce.mp3')
 os.remove('responce.mp3')
-print('start')      
+print('start')
+timer = 0      
 while True:
+    if round(int(time.time())) == timer or round(int(time.time())) + 1 == timer or round(int(time.time())) - 1 == timer:
+        playsound("alarm.mp3")
     if keyboard.is_pressed(('ctrl','f1')):
        
         run = True
@@ -249,6 +254,7 @@ while True:
         try:
 
             inp = r.recognize_google(audio)
+            inp = inp.lower()
             print(inp)
             if r.recognize_google(audio) == 'quit':
                 break
@@ -272,6 +278,20 @@ while True:
                     playsound('responce.mp3')
                     os.remove('responce.mp3')
 
+                run = False
+            if "timer" in str(inp):
+                x = inp.split(" ")
+                index = 0
+                for idx,i in enumerate(x):
+                    try:
+                        y = int(i)
+                        index = idx
+                        break
+                    except:
+                        pass
+                if x[index] =="minute" or "minutes":
+                    timer = round(int(time.time())) + (y *60)
+                print(timer)
                 run = False
             if 'look up' in str(inp)[:7]:
                 
@@ -298,6 +318,18 @@ while True:
                     
                     wb.open("https://www.google.com/search?q="+ str(inp))
                     run = False
+            if "define" in str(inp):
+                inp = inp.split(" ")
+                inp = str(inp[1])
+                url = f"https://api.dictionaryapi.dev/api/v2/entries/en_US/{inp}"
+                response = requests.get(url)
+                dictonary = json.loads(response.text)
+                x = dictonary[0]["meanings"][0]["definitions"][0]["definition"]
+                tts = gTTS(x)
+                tts.save('responce.mp3')
+                playsound('responce.mp3')
+                os.remove('responce.mp3')
+                run = False
             if 'nevermind' in str(inp):
                 tts = gTTS('Ok')
                 tts.save('responce.mp3')
@@ -308,6 +340,3 @@ while True:
                 chat(inp)
         except:
             pass
-    
-    
-    
