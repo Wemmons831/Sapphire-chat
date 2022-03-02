@@ -28,6 +28,6 @@ google things, define words, tell weather, do basic math (+ - * /), open videos 
 ## Known Issues
 
 1. Chipset errors:
-    to solve this you must find a version of tensorflo that doesn't use the issued chipset.
+    to solve this you must find a version of tensorflow that doesn't use the issued chipset.
 2. Not Opening Programs:
     To solve this the program you wish to open must be in the C:/ProgramData/Microsoft/Windows/Start Menu/Programs/ directory
